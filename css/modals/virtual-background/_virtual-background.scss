@@ -1,4 +1,5 @@
 .virtual-background-dialog {
+    position: relative;
     max-height: 300px;
     color: white;
     display: inline-grid;
@@ -107,6 +108,7 @@
         vertical-align: middle;
         line-height: 60px;
     }
+
     @media (min-width: 432px) and (max-width: 632px) {
         font-size: 1.5vw;
         .virtual-background-none, .thumbnail, .thumbnail-selected, .none-selected, .blur, .blur-selected, .slight-blur, .slight-blur-selected{
@@ -118,6 +120,13 @@
 
 .modal-dialog-form .virtual-background-loading {
     overflow: hidden;
+    position: fixed;
+    left: 50%;
+    margin-top: 10px;
+    transform: translateX(-50%);
+}
+.modal-dialog-form .video-preview {
+    height: 250px;
 }
 .file-upload-btn {
     display: none;
@@ -126,6 +135,7 @@
     font-size: 14px;
     font-weight: 600;
     line-height: 20px;
+    margin-top: 16px;
     margin-bottom: 8px;
     color: #669AEC;
     display: inline-flex;
@@ -150,10 +160,41 @@
     position: relative;
 }
 
-.loading-content-text{
-  margin-right: 15px;
-}
-
 .add-background{
     margin-right: 8px;
 }
+
+.apply-background-btn{
+    margin-top: 16px;
+    float: right;
+ }
+
+ .video-background-preview-entry{
+    height: 250px;
+    margin-bottom: 8px;
+    width: 572px;
+    position: fixed;
+    z-index: 2;
+    @media (min-width: 432px) and (max-width: 632px) {
+        width: 340px;
+    }
+ }
+
+ .video-preview-loader{
+     border-radius: 6px;
+     background-color: transparent;
+     height: 250px;
+     margin-bottom: 8px;
+     width: 572px;
+     position: fixed;
+     z-index: 2;
+     @media (min-width: 432px) and (max-width: 632px) {
+         width: 340px;
+     }
+ }
+
+ .video-preview-loader svg{
+    position: absolute;
+    top: 40%;
+    left: 45%;
+ }
