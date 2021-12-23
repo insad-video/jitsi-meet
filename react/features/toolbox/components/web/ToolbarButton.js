@@ -11,7 +11,7 @@ import type { Props as AbstractToolbarButtonProps }
 /**
  * The type of the React {@code Component} props of {@link ToolbarButton}.
  */
-type Props = AbstractToolbarButtonProps & {
+export type Props = AbstractToolbarButtonProps & {
 
     /**
      * The text to display in the tooltip.
@@ -25,7 +25,7 @@ type Props = AbstractToolbarButtonProps & {
     tooltipPosition: string,
 
     /**
-     * keyDown handler
+     * KeyDown handler.
      */
     onKeyDown?: Function
 };
@@ -33,7 +33,7 @@ type Props = AbstractToolbarButtonProps & {
 /**
  * Represents a button in the toolbar.
  *
- * @extends AbstractToolbarButton
+ * @augments AbstractToolbarButton
  */
 class ToolbarButton extends AbstractToolbarButton<Props> {
     /**

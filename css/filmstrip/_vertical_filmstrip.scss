@@ -28,7 +28,7 @@
     flex-direction: column-reverse;
     height: 100%;
     width: 100%;
-    padding: ($desktopAppDragBarHeight - 5px) 5px 10px;
+    padding: ($desktopAppDragBarHeight - 5px) 5px calc(env(safe-area-inset-bottom, 0) + 10px);
     /**
      * fixed positioning is necessary for remote menus and tooltips to pop
      * out of the scrolling filmstrip. AtlasKit dialogs and tooltips use
@@ -114,6 +114,7 @@
     .remote-videos {
         display: flex;
         transition: height .3s ease-in;
+        overscroll-behavior: contain;
 
         & > div {
             position: absolute;

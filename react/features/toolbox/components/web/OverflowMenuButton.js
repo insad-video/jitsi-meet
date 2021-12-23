@@ -7,9 +7,12 @@ import { createToolbarEvent, sendAnalytics } from '../../../analytics';
 import { translate } from '../../../base/i18n';
 import { IconHorizontalPoints } from '../../../base/icons';
 import { connect } from '../../../base/redux';
+import { ReactionEmoji, ReactionsMenu } from '../../../reactions/components';
+import { type ReactionEmojiProps } from '../../../reactions/constants';
+import { getReactionsQueue } from '../../../reactions/functions.any';
 
 import Drawer from './Drawer';
-import DrawerPortal from './DrawerPortal';
+import JitsiPortal from './JitsiPortal';
 import ToolbarButton from './ToolbarButton';
 
 /**
@@ -45,13 +48,23 @@ type Props = {
     /**
      * Invoked to obtain translated strings.
      */
-    t: Function
+    t: Function,
+
+    /**
+     * The array of reactions to be displayed.
+     */
+    reactionsQueue: Array<ReactionEmojiProps>,
+
+    /**
+     * Whether or not to display the reactions in the mobile menu.
+     */
+    showMobileReactions: boolean
 };
 
 /**
  * A React {@code Component} for opening or closing the {@code OverflowMenu}.
  *
- * @extends Component
+ * @augments Component
  */
 class OverflowMenuButton extends Component<Props> {
     /**
@@ -93,7 +106,7 @@ class OverflowMenuButton extends Component<Props> {
      * @returns {ReactElement}
      */
     render() {
-        const { children, isOpen, overflowDrawer } = this.props;
+        const { children, isOpen, overflowDrawer, reactionsQueue, showMobileReactions } = this.props;
 
         return (
             <div className = 'toolbox-button-wth-dialog'>
@@ -101,14 +114,21 @@ class OverflowMenuButton extends Component<Props> {
                     overflowDrawer ? (
                         <>
                             {this._renderToolbarButton()}
-                            <DrawerPortal>
+                            <JitsiPortal>
                                 <Drawer
-                                    canExpand = { true }
                                     isOpen = { isOpen }
                                     onClose = { this._onCloseDialog }>
                                     {children}
+                                    {showMobileReactions && <ReactionsMenu overflowMenu = { true } />}
                                 </Drawer>
-                            </DrawerPortal>
+                                {showMobileReactions && <div className = 'reactions-animations-container'>
+                                    {reactionsQueue.map(({ reaction, uid }, index) => (<ReactionEmoji
+                                        index = { index }
+                                        key = { uid }
+                                        reaction = { reaction }
+                                        uid = { uid } />))}
+                                </div>}
+                            </JitsiPortal>
                         </>
                     ) : (
                         <InlineDialog
@@ -188,7 +208,8 @@ function mapStateToProps(state) {
     const { overflowDrawer } = state['features/toolbox'];
 
     return {
-        overflowDrawer
+        overflowDrawer,
+        reactionsQueue: getReactionsQueue(state)
     };
 }
 
