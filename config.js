@@ -1,3 +1,4 @@
+
 /* eslint-disable no-unused-vars, no-var */
 
 var config = {
@@ -97,6 +98,17 @@ var config = {
 
     // Disables self-view settings in UI
     // disableSelfViewSettings: false,
+
+    // screenshotCapture : {
+    //      Enables the screensharing capture feature.
+    //      enabled: false,
+    //
+    //      The mode for the screenshot capture feature.
+    //      Can be either 'recording' - screensharing screenshots are taken
+    //      only when the recording is also on,
+    //      or 'always' - screensharing screenshots are always taken.
+    //      mode: 'recording'
+    // }
 
     // Disables ICE/UDP by filtering out local and remote UDP candidates in
     // signalling.
@@ -236,7 +248,11 @@ var config = {
     //     max: 5
     // },
 
-    // Try to start calls with screen-sharing instead of camera video.
+    // This option has been deprecated since it is no longer supported as per the w3c spec.
+    // https://w3c.github.io/mediacapture-screen-share/#dom-mediadevices-getdisplaymedia. If the user has not
+    // interacted with the webpage before the getDisplayMedia call, the promise will be rejected by the browser. This
+    // has already been implemented in Firefox and Safari and will be implemented in Chrome soon.
+    // https://bugs.chromium.org/p/chromium/issues/detail?id=1198918
     // startScreenSharing: false,
 
     // Recording
@@ -458,6 +474,10 @@ var config = {
     // If Lobby is enabled starts knocking automatically.
     // autoKnockLobby: false,
 
+    // Enable lobby chat.
+    // enableLobbyChat: true,
+
+    // DEPRECATED! Use `breakoutRooms.hideAddRoomButton` instead.
     // Hides add breakout room button
     // hideAddRoomButton: false,
 
@@ -491,9 +511,12 @@ var config = {
     // defaultRemoteDisplayName: 'Fellow Jitster',
 
     // Hides the display name from the participant thumbnail
-    // hideDisplayName: false
+    // hideDisplayName: false,
 
-    // Default language for the user interface.
+    // Hides the dominant speaker name badge that hovers above the toolbox
+    // hideDominantSpeakerBadge: false,
+
+    // Default language for the user interface. Cannot be overwritten.
     // defaultLanguage: 'en',
 
     // Disables profile and the edit of all fields from the profile settings (display name and email)
@@ -580,6 +603,7 @@ var config = {
     //    'fullscreen',
     //    'hangup',
     //    'help',
+    //    'highlight',
     //    'invite',
     //    'livestreaming',
     //    'microphone',
@@ -612,44 +636,66 @@ var config = {
     //     timeout: 4000,
     //     // Moved from interfaceConfig.TOOLBAR_ALWAYS_VISIBLE
     //     // Whether toolbar should be always visible or should hide after x miliseconds.
-    //     alwaysVisible: false
+    //     alwaysVisible: false,
+    //     // Indicates whether the toolbar should still autohide when chat is open
+    //     autoHideWhileChatIsOpen: false
     // },
 
-    // Toolbar buttons which have their click event exposed through the API on
-    // `toolbarButtonClicked` event instead of executing the normal click routine.
+    // Toolbar buttons which have their click/tap event exposed through the API on
+    // `toolbarButtonClicked`. Passing a string for the button key will
+    // prevent execution of the click/tap routine; passing an object with `key` and
+    // `preventExecution` flag on false will not prevent execution of the click/tap
+    // routine. Below array with mixed mode for passing the buttons.
     // buttonsWithNotifyClick: [
-    //    'camera',
-    //    'chat',
-    //    'closedcaptions',
-    //    'desktop',
-    //    'download',
-    //    'embedmeeting',
-    //    'etherpad',
-    //    'feedback',
-    //    'filmstrip',
-    //    'fullscreen',
-    //    'hangup',
-    //    'help',
-    //    'invite',
-    //    'livestreaming',
-    //    'microphone',
-    //    'mute-everyone',
-    //    'mute-video-everyone',
-    //    'participants-pane',
-    //    'profile',
-    //    'raisehand',
-    //    'recording',
-    //    'security',
-    //    'select-background',
-    //    'settings',
-    //    'shareaudio',
-    //    'sharedvideo',
-    //    'shortcuts',
-    //    'stats',
-    //    'tileview',
-    //    'toggle-camera',
-    //    'videoquality',
-    //    '__end'
+    //     'camera',
+    //     {
+    //         key: 'chat',
+    //         preventExecution: false
+    //     },
+    //     {
+    //         key: 'closedcaptions',
+    //         preventExecution: true
+    //     },
+    //     'desktop',
+    //     'download',
+    //     'embedmeeting',
+    //     'etherpad',
+    //     'feedback',
+    //     'filmstrip',
+    //     'fullscreen',
+    //     'hangup',
+    //     'help',
+    //     {
+    //         key: 'invite',
+    //         preventExecution: false
+    //     },
+    //     'livestreaming',
+    //     'microphone',
+    //     'mute-everyone',
+    //     'mute-video-everyone',
+    //     'participants-pane',
+    //     'profile',
+    //     {
+    //         key: 'raisehand',
+    //         preventExecution: true
+    //     },
+    //     'recording',
+    //     'security',
+    //     'select-background',
+    //     'settings',
+    //     'shareaudio',
+    //     'sharedvideo',
+    //     'shortcuts',
+    //     'stats',
+    //     'tileview',
+    //     'toggle-camera',
+    //     'videoquality',
+    //     // The add passcode button from the security dialog.
+    //     {
+    //         key: 'add-passcode',
+    //         preventExecution: false
+    //     }
+    //     '__end'
     // ],
 
     // List of pre meeting screens buttons to hide. The values must be one or more of the 5 allowed buttons:
@@ -703,6 +749,20 @@ var config = {
 
     // Enables detecting faces of participants and get their expression and send it to other participants
     // enableFacialRecognition: true,
+
+    // Enables displaying facial expressions in speaker stats
+    // enableDisplayFacialExpressions: true,
+
+    // faceCoordinatesSharing: {
+    //     // Enables sharing your face cordinates. Used for centering faces within a video.
+    //     enabled: false,
+
+    //     // Minimum required face movement percentage threshold for sending new face coordinates data.
+    //     threshold: 10,
+
+    //     // Miliseconds for processing a new image capture in order to detect face coordinates if they exist.
+    //     captureInterval: 100
+    // },
 
     // Controls the percentage of automatic feedback shown to participants when callstats is enabled.
     // The default value is 100%. If set to 0, no automatic feedback will be requested
@@ -938,11 +998,24 @@ var config = {
 
     // Options related to the remote participant menu.
     // remoteVideoMenu: {
+    //     // Whether the remote video context menu to be rendered or not.
+    //     disabled: true,
     //     // If set to true the 'Kick out' button will be disabled.
     //     disableKick: true,
     //     // If set to true the 'Grant moderator' button will be disabled.
-    //     disableGrantModerator: true
+    //     disableGrantModerator: true,
+    //     // If set to true the 'Send private message' button will be disabled.
+    //     disablePrivateChat: true
     // },
+
+    // Endpoint that enables support for salesforce integration with in-meeting resource linking
+    // This is required for:
+    // listing the most recent records - salesforceUrl/records/recents
+    // searching records - salesforceUrl/records?text=${text}
+    // retrieving record details - salesforceUrl/records/${id}?type=${type}
+    // and linking the meeting - salesforceUrl/sessions/${sessionId}/records/${id}
+    //
+    // salesforceUrl: 'https://api.example.com/',
 
     // If set to true all muting operations of remote participants will be disabled.
     // disableRemoteMute: true,
@@ -1007,6 +1080,14 @@ var config = {
     */
     // dynamicBrandingUrl: '',
 
+    // Options related to the breakout rooms feature.
+    // breakoutRooms: {
+    //     // Hides the add breakout room button. This replaces `hideAddRoomButton`.
+    //     hideAddRoomButton: false,
+    //     // Hides the join breakout room button.
+    //     hideJoinRoomButton: false
+    // },
+
     // When true the user cannot add more images to be used as virtual background.
     // Only the default ones from will be available.
     // disableAddingBackgroundImages: false,
@@ -1025,7 +1106,8 @@ var config = {
     // If true, tile view will not be enabled automatically when the participants count threshold is reached.
     // disableTileView: true,
 
-    // If true, the tiles will be displayed contained within the available space rather than enlarged to cover it.
+    // If true, the tiles will be displayed contained within the available space rather than enlarged to cover it,
+    // with a 16:9 aspect ratio (old behaviour).
     // disableTileEnlargement: true,
 
     // Controls the visibility and behavior of the top header conference info labels.
@@ -1041,7 +1123,8 @@ var config = {
     //         'e2ee',
     //         'transcribing',
     //         'video-quality',
-    //         'insecure-room'
+    //         'insecure-room',
+    //         'highlight-moment'
     //     ]
     // },
 
@@ -1125,6 +1208,7 @@ var config = {
      forceJVB121Ratio
      forceTurnRelay
      hiddenDomain
+     hiddenFromRecorderFeatureEnabled
      ignoreStartMuted
      websocketKeepAlive
      websocketKeepAliveUrl
@@ -1180,6 +1264,7 @@ var config = {
     //     'notify.invitedThreePlusMembers', // shown when 3+ participants have been invited
     //     'notify.invitedTwoMembers', // shown when 2 participants have been invited
     //     'notify.kickParticipant', // shown when a participant is kicked
+    //     'notify.linkToSalesforce', // shown when joining a meeting with salesforce integration
     //     'notify.moderationStartedTitle', // shown when AV moderation is activated
     //     'notify.moderationStoppedTitle', // shown when AV moderation is deactivated
     //     'notify.moderationInEffectTitle', // shown when user attempts to unmute audio during AV moderation
@@ -1189,6 +1274,7 @@ var config = {
     //     'notify.mutedTitle', // shown when user has been muted upon joining,
     //     'notify.newDeviceAudioTitle', // prompts the user to use a newly detected audio device
     //     'notify.newDeviceCameraTitle', // prompts the user to use a newly detected camera
+    //     'notify.participantWantsToJoin', // shown when lobby is enabled and participant requests to join meeting
     //     'notify.passwordRemovedRemotely', // shown when a password has been removed remotely
     //     'notify.passwordSetRemotely', // shown when a password has been set remotely
     //     'notify.raisedHand', // shown when a partcipant used raise hand,
@@ -1212,8 +1298,30 @@ var config = {
     // Prevent the filmstrip from autohiding when screen width is under a certain threshold
     // disableFilmstripAutohiding: false,
 
+    // filmstrip: {
+    //     // Disables user resizable filmstrip. Also, allows configuration of the filmstrip
+    //     // (width, tiles aspect ratios) through the interfaceConfig options.
+    //     disableResizable: false,
+    // }
+
+
     // Specifies whether the chat emoticons are disabled or not
     // disableChatSmileys: false,
+
+    // Settings for the GIPHY integration.
+    // giphy: {
+    //     // Whether the feature is enabled or not.
+    //     enabled: false,
+    //     // SDK API Key from Giphy.
+    //     sdkKey: '',
+    //     // Display mode can be one of:
+    //     // - tile: show the GIF on the tile of the participant that sent it.
+    //     // - chat: show the GIF as a message in chat
+    //     // - all: all of the above. This is the default option
+    //     displayMode: 'all',
+    //     // How long the GIF should be displayed on the tile (in miliseconds).
+    //     tileTime: 5000
+    // },
 
     // Allow all above example options to include a trailing comma and
     // prevent fear when commenting out the last value.

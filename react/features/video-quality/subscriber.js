@@ -30,6 +30,12 @@ StateListenerRegistry.register(
         _updateReceiverVideoConstraints(store);
     }, 100));
 
+StateListenerRegistry.register(
+    /* selector */ state => state['features/base/tracks'],
+    /* listener */(remoteTracks, store) => {
+        _updateReceiverVideoConstraints(store);
+    });
+
 /**
  * Handles the use case when the on-stage participant has changed.
  */
@@ -200,15 +206,16 @@ function _updateReceiverVideoConstraints({ getState }) {
     const sourceNameSignaling = getSourceNameSignalingFeatureFlag(state);
     const localParticipantId = getLocalParticipant(state).id;
 
-    const receiverConstraints = {
-        constraints: {},
-        defaultConstraints: { 'maxHeight': VIDEO_QUALITY_LEVELS.NONE },
-        lastN,
-        ...sourceNameSignaling ? { onStageSources: [] } : { onStageEndpoints: [] },
-        ...sourceNameSignaling ? { selectedSources: [] } : { selectedEndpoints: [] }
-    };
+    let receiverConstraints;
 
     if (sourceNameSignaling) {
+        receiverConstraints = {
+            constraints: {},
+            defaultConstraints: { 'maxHeight': VIDEO_QUALITY_LEVELS.NONE },
+            lastN,
+            onStageSources: [],
+            selectedSources: []
+        };
         const visibleRemoteTrackSourceNames = [];
         let largeVideoSourceName;
 
@@ -267,6 +274,14 @@ function _updateReceiverVideoConstraints({ getState }) {
         }
 
     } else {
+        receiverConstraints = {
+            constraints: {},
+            defaultConstraints: { 'maxHeight': VIDEO_QUALITY_LEVELS.NONE },
+            lastN,
+            onStageEndpoints: [],
+            selectedEndpoints: []
+        };
+
         // Tile view.
         // eslint-disable-next-line no-lonely-if
         if (shouldDisplayTileView(state)) {
